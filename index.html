@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Progress Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+
+    .info-box {
+      font-size: 18px;
+      margin: 15px 0;
+      background: #f0f0f0;
+      padding: 15px;
+      border-radius: 10px;
+      line-height: 1.8em;
+    }
+
+    .info-box span {
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    button.reduce {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    button.reduce:hover {
+      background-color: #45a049;
+    }
+
+    button.reset {
+      background-color: #f44336;
+      color: white;
+    }
+
+    button.reset:hover {
+      background-color: #d32f2f;
+    }
+
+    @media (max-width: 600px) {
+      .info-box {
+        font-size: 16px;
+      }
+
+      input, button {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Progress Tracker</h1>
+
+    <div class="info-box">
+      🎯 <span>Target:</span> 9,00,000<br>
+      ✅ <span>Completed:</span> <span id="completed">0</span><br>
+      ⏳ <span>Remaining:</span> <span id="remaining">900000</span><br>
+      📈 <span>Progress:</span> <span id="percentage">0%</span>
+    </div>
+
+    <input type="number" id="inputValue" placeholder="Enter number to subtract" />
+    <button class="reduce" onclick="reduceCount()">Reduce</button>
+    <button class="reset" onclick="resetCount()">Reset</button>
+  </div>
+
+  <script>
+    const initialCount = 900000;
+
+    let currentCount = parseInt(localStorage.getItem('counter')) || initialCount;
+
+    function updateDisplay() {
+      const completed = initialCount - currentCount;
+      const percent = ((completed / initialCount) * 100).toFixed(2);
+      document.getElementById('completed').innerText = completed.toLocaleString();
+      document.getElementById('remaining').innerText = currentCount.toLocaleString();
+      document.getElementById('percentage').innerText = `${percent}%`;
+    }
+
+    function reduceCount() {
+      const input = document.getElementById('inputValue').value;
+      const value = parseInt(input);
+      if (isNaN(value) || value <= 0) {
+        alert("Please enter a valid positive number.");
+        return;
+      }
+      if (value > currentCount) {
+        alert("Cannot reduce more than remaining.");
+        return;
+      }
+      currentCount -= value;
+      localStorage.setItem('counter', currentCount);
+      updateDisplay();
+      document.getElementById('inputValue').value = '';
+    }
+
+    function resetCount() {
+      if (confirm("Are you sure you want to reset the counter?")) {
+        currentCount = initialCount;
+        localStorage.setItem('counter', currentCount);
+        updateDisplay();
+      }
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
